@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Signatures</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #4CAF50;
+            margin-top: 20px;
+        }
+
+        p {
+            font-size: 1.1rem;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        input[type="file"] {
+            display: block;
+            margin: 15px auto;
+        }
+
+        .steps {
+            text-align: left;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .steps ul {
+            padding-left: 20px;
+        }
+
+        .steps li {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+
+        .file-display {
+            margin-top: 20px;
+        }
+
+        .file-display img {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Compare Signatures</h1>
+
+        <div class="steps">
+            <h3>Steps to Compare Signatures</h3>
+            <ul>
+                <li><strong>Step 1:</strong> Upload the first signature (Signature 1).</li>
+                <li><strong>Step 2:</strong> Upload the second signature (Signature 2).</li>
+                <li><strong>Step 3:</strong> Click "Compare" to see the similarity score.</li>
+                <li><strong>Step 4:</strong> View the result to determine whether the signatures match.</li>
+            </ul>
+        </div>
+        <hr>
+        <hr><hr>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="image_a">Upload Signature 1:</label>
+            <input type="file" name="image_a" required>
+            <label for="image_b">Upload Signature 2:</label>
+            <input type="file" name="image_b" required>
+            <button type="submit">Compare</button>
+        </form>
+
+        {% if prediction is not none %}
+            <h2>Similarity Score: {{ prediction }}</h2>
+            {% if prediction > 0.5 %}
+                <p>The signatures are a match!</p>
+            {% else %}
+                <p>The signatures do not match.</p>
+            {% endif %}
+        {% endif %}
+
+        {% if file_url %}
+            <div class="file-display">
+                <h3>Uploaded Signature 1:</h3>
+                <img src="{{ file_url }}" alt="Uploaded Signature 1" width="200">
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
